@@ -1,0 +1,318 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Platform user account profile and non-sensitive academic metadata.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "role": { "type": "string", "enum": ["student", "instructor", "admin"] },
+        "institution": { "type": "string", "maxLength": 160 },
+        "degree": { "type": "string", "maxLength": 120 },
+        "bio": { "type": "string", "maxLength": 500 },
+        "streakDays": { "type": "number" },
+        "xp": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "role", "createdAt", "updatedAt"]
+    },
+    "UserPrivate": {
+      "title": "UserPrivate",
+      "description": "Isolated PII document for user email and contact preferences.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "maxLength": 200 },
+        "emailVerified": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "emailVerified", "updatedAt"]
+    },
+    "AdminMarker": {
+      "title": "AdminMarker",
+      "description": "Trusted administrator marker document.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "grantedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "grantedAt"]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "Structured course catalog item.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 3, "maxLength": 160 },
+        "thumbnail": { "type": "string", "maxLength": 500 },
+        "instructorId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "instructorName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "description": { "type": "string", "minLength": 10, "maxLength": 3000 },
+        "difficulty": { "type": "string", "enum": ["Beginner", "Intermediate", "Advanced"] },
+        "durationHours": { "type": "number" },
+        "category": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "totalModules": { "type": "number" },
+        "totalLessons": { "type": "number" },
+        "rating": { "type": "number" },
+        "enrollmentCount": { "type": "number" },
+        "published": { "type": "boolean" },
+        "isDemoCourse": { "type": "boolean" },
+        "featured": { "type": "boolean" },
+        "finalQuizId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "instructorId", "instructorName", "description", "difficulty", "category", "published", "createdAt", "updatedAt"]
+    },
+    "Module": {
+      "title": "Module",
+      "description": "Course module grouping sequential lessons.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "courseId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "instructorId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "order": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "courseId", "instructorId", "title", "order", "createdAt"]
+    },
+    "Lesson": {
+      "title": "Lesson",
+      "description": "Individual lesson, quiz reference, or practical lab activity.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "courseId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "moduleId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "instructorId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 2, "maxLength": 180 },
+        "type": { "type": "string", "enum": ["video", "article", "quiz", "practical"] },
+        "order": { "type": "number" },
+        "durationMinutes": { "type": "number" },
+        "videoUrl": { "type": "string", "maxLength": 800 },
+        "contentMarkdown": { "type": "string", "maxLength": 20000 },
+        "pdfNotesUrl": { "type": "string", "maxLength": 800 },
+        "quizId": { "type": "string", "maxLength": 128 },
+        "experimentId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "courseId", "moduleId", "instructorId", "title", "type", "order", "createdAt"]
+    },
+    "Enrollment": {
+      "title": "Enrollment",
+      "description": "Student enrollment record linking user and course.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 260, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "courseId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "status": { "type": "string", "enum": ["active", "completed"] },
+        "progressPercent": { "type": "number" },
+        "completedLessonsCount": { "type": "number" },
+        "enrolledAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "courseId", "status", "progressPercent", "enrolledAt", "updatedAt"]
+    },
+    "LessonProgress": {
+      "title": "LessonProgress",
+      "description": "Per-user per-lesson completion, bookmark, and notes.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 260, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "courseId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "lessonId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "completed": { "type": "boolean" },
+        "bookmarked": { "type": "boolean" },
+        "personalNote": { "type": "string", "maxLength": 5000 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "courseId", "lessonId", "completed", "bookmarked", "updatedAt"]
+    },
+    "Quiz": {
+      "title": "Quiz",
+      "description": "Timed quiz or final assessment metadata.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "courseId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "moduleId": { "type": "string", "maxLength": 128 },
+        "instructorId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 2, "maxLength": 180 },
+        "timeLimitMinutes": { "type": "number" },
+        "passingScore": { "type": "number" },
+        "isFinalAssessment": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "courseId", "instructorId", "title", "timeLimitMinutes", "passingScore", "isFinalAssessment", "createdAt"]
+    },
+    "Question": {
+      "title": "Question",
+      "description": "Assessment question item belonging to a quiz.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "quizId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "courseId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "instructorId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "type": { "type": "string", "enum": ["mcq", "multi", "tf", "short"] },
+        "prompt": { "type": "string", "minLength": 3, "maxLength": 1500 },
+        "explanation": { "type": "string", "maxLength": 1500 },
+        "points": { "type": "number" }
+      },
+      "required": ["id", "quizId", "courseId", "instructorId", "type", "prompt", "points"]
+    },
+    "QuizAttempt": {
+      "title": "QuizAttempt",
+      "description": "Student quiz attempt and score record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 260, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "quizId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "courseId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "score": { "type": "number" },
+        "maxScore": { "type": "number" },
+        "percentage": { "type": "number" },
+        "passed": { "type": "boolean" },
+        "submittedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "quizId", "courseId", "score", "maxScore", "percentage", "passed", "submittedAt"]
+    },
+    "Certificate": {
+      "title": "Certificate",
+      "description": "Course completion certificate verified on-chain/database.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "certificateCode": { "type": "string", "minLength": 6, "maxLength": 64 },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "courseId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "courseTitle": { "type": "string", "minLength": 2, "maxLength": 180 },
+        "instructorName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "quizId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "verified": { "type": "boolean" },
+        "issuedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "certificateCode", "userId", "studentName", "courseId", "courseTitle", "instructorName", "quizId", "verified", "issuedAt"]
+    },
+    "Experiment": {
+      "title": "Experiment",
+      "description": "Virtual laboratory experiment specification or saved observation run.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "category": { "type": "string", "minLength": 2, "maxLength": 60 },
+        "title": { "type": "string", "minLength": 2, "maxLength": 180 },
+        "objective": { "type": "string", "maxLength": 1000 },
+        "isSimulated": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "category", "title", "isSimulated", "createdAt"]
+    },
+    "Discussion": {
+      "title": "Discussion",
+      "description": "Course discussion thread or student question.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "courseId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "authorId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "authorRole": { "type": "string", "enum": ["student", "instructor", "admin"] },
+        "title": { "type": "string", "minLength": 2, "maxLength": 200 },
+        "body": { "type": "string", "minLength": 2, "maxLength": 4000 },
+        "reportedCount": { "type": "number" },
+        "isFlagged": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "courseId", "authorId", "authorName", "authorRole", "title", "body", "reportedCount", "isFlagged", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "User-targeted learning or announcement notification.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "message": { "type": "string", "minLength": 2, "maxLength": 600 },
+        "type": { "type": "string", "enum": ["enrollment", "lesson", "quiz", "completion", "certificate", "announcement"] },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title", "message", "type", "read", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Public/owner user learning profile."
+    },
+    "/users/{userId}/private/{docId}": {
+      "schema": { "$ref": "#/entities/UserPrivate" },
+      "description": "Private PII document strictly accessible to owner and admin."
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminMarker" },
+      "description": "Trusted administrator lookup collection."
+    },
+    "/courses/{courseId}": {
+      "schema": { "$ref": "#/entities/Course" },
+      "description": "Courses managed by instructors and admins."
+    },
+    "/modules/{moduleId}": {
+      "schema": { "$ref": "#/entities/Module" },
+      "description": "Course modules ordered by syllabus."
+    },
+    "/lessons/{lessonId}": {
+      "schema": { "$ref": "#/entities/Lesson" },
+      "description": "Course lessons, PDF notes, and lab activities."
+    },
+    "/enrollments/{enrollmentId}": {
+      "schema": { "$ref": "#/entities/Enrollment" },
+      "description": "Student enrollments keyed as userId_courseId."
+    },
+    "/lessonProgress/{progressId}": {
+      "schema": { "$ref": "#/entities/LessonProgress" },
+      "description": "Lesson completion, bookmarks, and notes keyed as userId_lessonId."
+    },
+    "/quizzes/{quizId}": {
+      "schema": { "$ref": "#/entities/Quiz" },
+      "description": "Quizzes and final assessments."
+    },
+    "/questions/{questionId}": {
+      "schema": { "$ref": "#/entities/Question" },
+      "description": "Quiz question bank items."
+    },
+    "/quizAttempts/{attemptId}": {
+      "schema": { "$ref": "#/entities/QuizAttempt" },
+      "description": "Submitted quiz attempts keyed as userId_quizId."
+    },
+    "/certificates/{certificateId}": {
+      "schema": { "$ref": "#/entities/Certificate" },
+      "description": "Issued completion certificates."
+    },
+    "/experiments/{experimentId}": {
+      "schema": { "$ref": "#/entities/Experiment" },
+      "description": "Virtual laboratory experiment records."
+    },
+    "/discussions/{discussionId}": {
+      "schema": { "$ref": "#/entities/Discussion" },
+      "description": "Course community discussion threads."
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "User notifications."
+    }
+  }
+}

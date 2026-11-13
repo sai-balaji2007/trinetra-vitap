@@ -1,0 +1,6 @@
+{
+  "name": "Trinetra — 3D STEM Simulation Platform",
+  "description": "Browser-native 3D STEM simulation platform for Indian engineering and science students, featuring interactive physics, chemistry, and electronics experiments with zero hardware barriers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
